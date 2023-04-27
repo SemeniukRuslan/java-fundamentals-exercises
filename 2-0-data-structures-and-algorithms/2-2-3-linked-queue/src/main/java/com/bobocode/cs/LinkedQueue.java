@@ -1,9 +1,6 @@
 package com.bobocode.cs;
 
-import com.bobocode.util.ExerciseNotCompletedException;
-
 import java.util.Objects;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * {@link LinkedQueue} implements FIFO {@link Queue}, using singly linked nodes. Nodes are stores in instances of nested
@@ -18,6 +15,10 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author Ivan Virchenko
  */
 public class LinkedQueue<T> implements Queue<T> {
+    private Node<T> first;
+    private Node<T> last;
+    private int size;
+
     static class Node<T> {
         T element;
         Node<T> next;
@@ -27,15 +28,12 @@ public class LinkedQueue<T> implements Queue<T> {
         }
     }
 
-    private Node<T> first;
-    private Node<T> last;
-    private int size;
-
     /**
      * Adds an element to the end of the queue.
      *
      * @param element the element to add
      */
+    // 0 or 1 elements in the queue
     public void add(T element) {
         Objects.checkIndex(0, size + 1);
         Node<T> node = new Node<>(element);
@@ -53,20 +51,19 @@ public class LinkedQueue<T> implements Queue<T> {
      *
      * @return an element that was retrieved from the head or null if queue is empty
      */
+    // 0 or 1 or 2 elements in the queue
     public T poll() {
         if (first == null) {
             return null;
-        } else if (first == last) {
-            T elem = first.element;
-            first = last = null;
-            size--;
-            return elem;
-        } else {
-            T elem = first.element;
-            first = first.next;
-            size--;
-            return elem;
         }
+        T elem = first.element;
+        if (first == last) {
+            first = last = null;
+        } else {
+            first = first.next;
+        }
+        size--;
+        return elem;
     }
 
     /**

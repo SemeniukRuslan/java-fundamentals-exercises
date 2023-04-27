@@ -32,7 +32,8 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RecursiveBinarySearchTreeTest {
     private static final Predicate<Field> SIZE_FIELD = field ->
-            field.getName().toLowerCase().contains("size") || field.getName().toLowerCase().contains("length");
+            field.getName().toLowerCase().contains("size")
+                    || field.getName().toLowerCase().contains("length");
 
     private static final Predicate<Field> NODE_FIELD = field ->
             field.getType().getSimpleName().equals("Node");

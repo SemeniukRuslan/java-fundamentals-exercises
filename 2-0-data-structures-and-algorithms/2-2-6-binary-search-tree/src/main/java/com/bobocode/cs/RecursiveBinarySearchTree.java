@@ -1,7 +1,6 @@
 package com.bobocode.cs;
 
-import com.bobocode.util.ExerciseNotCompletedException;
-
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -20,72 +19,89 @@ import java.util.stream.Stream;
 public class RecursiveBinarySearchTree<T extends Comparable<T>> implements BinarySearchTree<T> {
     private static class Node<T> {
         T element;
-        Node<T> right;
         Node<T> left;
+        Node<T> right;
 
-        public Node(T element) {
+        private Node(T element) {
             this.element = element;
+        }
+
+        public static <T> Node<T> valueOf(T element) {
+            return new Node<>(element);
         }
     }
 
     private Node<T> root;
-    private int size;
+    private int size = 0;
 
     public static <T extends Comparable<T>> RecursiveBinarySearchTree<T> of(T... elements) {
-        RecursiveBinarySearchTree<T> tre = new RecursiveBinarySearchTree<>();
-        for (T ele : elements) {
-            tre.insert(ele);
-        }
-        return tre;
+        RecursiveBinarySearchTree<T> bst = new RecursiveBinarySearchTree<>();
+        Stream.of(elements).forEach(bst::insert);
+        return bst;
     }
 
     @Override
     public boolean insert(T element) {
+        Objects.requireNonNull(element);
+        boolean isInserted = insertElement(element);
+        if (isInserted) {
+            size++;
+        }
+        return isInserted;
+    }
+
+    boolean insertElement(T element) {
         if (root == null) {
-            root = new Node<>(element);
+            root = Node.valueOf(element);
             return true;
         } else {
-            return insert(root, element);
+            return insertIntoSubTree(root, element);
         }
     }
 
-    private boolean insert(Node<T> current, T element) {
-        if (element.compareTo(current.element) < 0) {
-            if (current.left == null) {
-                current.left = new RecursiveBinarySearchTree.Node<>(element);
-                size++;
-                return true;
-            } else {
-                return insert(current.left, element);
-            }
-        } else if (element.compareTo(current.element) > 0) {
-            if (current.right == null) {
-                current.right = new RecursiveBinarySearchTree.Node<>(element);
-                size++;
-                return true;
-            } else {
-                return insert(current.right, element);
-            }
+    private boolean insertIntoSubTree(Node<T> subTreeRoot, T element) {
+        if (subTreeRoot.element.compareTo(element) > 0) {
+            return insertIntoLeftSubtree(subTreeRoot, element);
+        } else if (subTreeRoot.element.compareTo(element) < 0) {
+            return insertIntoRightSubtree(subTreeRoot, element);
         } else {
             return false;
         }
     }
 
+    private boolean insertIntoLeftSubtree(Node<T> node, T element) {
+        if (node.left != null) {
+            return insertIntoSubTree(node.left, element);
+        } else {
+            node.left = Node.valueOf(element);
+            return true;
+        }
+    }
+
+    private boolean insertIntoRightSubtree(Node<T> node, T element) {
+        if (node.right != null) {
+            return insertIntoSubTree(node.right, element);
+        } else {
+            node.right = Node.valueOf(element);
+            return true;
+        }
+    }
 
     @Override
     public boolean contains(T element) {
-        return contains(root, element);
+        Objects.requireNonNull(element);
+        return findChildNodeByElement(root, element) != null;
     }
 
-    private boolean contains(Node<T> current, T element) {
-        if (root == null) {
-            return false;
-        } else if (current.element.compareTo(element) > 0) {
-            return contains(current.right, element);
-        } else if (current.element.compareTo(element) < 0) {
-            return contains(current.left, element);
+    private Node<T> findChildNodeByElement(Node<T> node, T element) {
+        if (node == null) {
+            return null;
+        } else if (node.element.compareTo(element) > 0) {
+            return findChildNodeByElement(node.left, element);
+        } else if (node.element.compareTo(element) < 0) {
+            return findChildNodeByElement(node.right, element);
         } else {
-            return true;
+            return node;
         }
     }
 
@@ -96,14 +112,14 @@ public class RecursiveBinarySearchTree<T extends Comparable<T>> implements Binar
 
     @Override
     public int depth() {
-        return root != null ? (depth(root) - 1) : 0;
+        return root != null ? depth(root) - 1 : 0;
     }
 
-    private int depth(RecursiveBinarySearchTree.Node<T> current) {
-        if (current == null) {
+    private int depth(Node<T> node) {
+        if (node == null) {
             return 0;
         } else {
-            return 1 + Math.max(depth(current.left), depth(current.right));
+            return 1 + Math.max(depth(node.left), depth(node.right));
         }
     }
 
@@ -112,11 +128,11 @@ public class RecursiveBinarySearchTree<T extends Comparable<T>> implements Binar
         inOrderTraversal(root, consumer);
     }
 
-    private void inOrderTraversal(Node<T> current, Consumer<T> consumer) {
-        if (current != null) {
-            inOrderTraversal(current.left, consumer);
-            consumer.accept(current.element);
-            inOrderTraversal(current.right, consumer);
+    private void inOrderTraversal(Node<T> node, Consumer<T> consumer) {
+        if (node != null) {
+            inOrderTraversal(node.left, consumer);
+            consumer.accept(node.element);
+            inOrderTraversal(node.right, consumer);
         }
     }
 }

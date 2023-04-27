@@ -1,8 +1,6 @@
 package com.bobocode.cs;
 
 
-import com.bobocode.util.ExerciseNotCompletedException;
-
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -30,7 +28,6 @@ public class LinkedList<T> implements List<T> {
         public Node(T element) {
             this.element = element;
         }
-
     }
 
     /**
@@ -41,7 +38,7 @@ public class LinkedList<T> implements List<T> {
      * @return a new list of elements the were passed as method parameters
      */
     public static <T> LinkedList<T> of(T... elements) {
-        LinkedList<T> linkedList = new LinkedList();
+        LinkedList<T> linkedList = new LinkedList<>();
         for (T e : elements) {
             linkedList.add(e);
         }
@@ -74,28 +71,26 @@ public class LinkedList<T> implements List<T> {
      */
     @Override
     public void add(int index, T element) {
-        if (index <= 0 || index >= size||isEmpty()) {
-            throw new ArithmeticException();
-        }else{
-            Node<T> node = new Node<>(element);
-            if (first == null) {
-                first = last = node;
-            } else if (index == 0) {
-                node.next = first;
-                first = node;
-            } else if (index == size) {
-                last.next = node;
-                last = node;
-            } else {
-                Node<T> tNode = gettNodeIndex(index - 1);
-                node.next = tNode.next;
-                tNode.next = node;
-            }
-            size++; // todo: implement this method
+        Objects.checkIndex(index, size + 1);
+        Node<T> node = new Node<>(element);
+
+        if (first == null) {
+            first = last = node;
+        } else if (index == 0) {
+            node.next = first;
+            first = node;
+        } else if (index == size) {
+            last.next = node;
+            last = node;
+        } else {
+            Node<T> tNode = getNodeIndex(index - 1);
+            node.next = tNode.next;
+            tNode.next = node;
         }
+        size++; // todo: implement this method
     }
 
-    private Node<T> gettNodeIndex(int index) {
+    private Node<T> getNodeIndex(int index) {
         Node<T> node = first;
         for (int i = 0; i < index; i++) {
             node = node.next;
@@ -112,8 +107,8 @@ public class LinkedList<T> implements List<T> {
      */
     @Override
     public void set(int index, T element) {
-        Objects.checkIndex(0, size);
-        Node<T> tNode = gettNodeIndex(index);
+        Objects.checkIndex(index, size);
+        Node<T> tNode = getNodeIndex(index);
         tNode.element = element; // todo: implement this method
     }
 
@@ -125,9 +120,9 @@ public class LinkedList<T> implements List<T> {
      * @return an element value
      */
     @Override
-    public T get(int index) {
-        Objects.checkIndex(0, size);
-        return gettNodeIndex(index).element; // todo: implement this method
+    public T get(int index) throws IndexOutOfBoundsException {
+        Objects.checkIndex(index, size);
+        return getNodeIndex(index).element; // todo: implement this method
     }
 
     /**
@@ -167,18 +162,20 @@ public class LinkedList<T> implements List<T> {
      */
     @Override
     public T remove(int index) {
-        Objects.checkIndex(0, size);
-        Node<T> tNode1 = gettNodeIndex(index - 1);
+        Objects.checkIndex(index, size);
+        Node<T> previousIndexNode = getNodeIndex(index - 1);
         T elementDoDelete = null;
         if (first == null) {
             last = null;
         } else if (index == 0) {
+            elementDoDelete = first.element;
             first = first.next;
         } else if (index == size - 1) {
-            last = tNode1;
+            elementDoDelete = last.element;
+            last = previousIndexNode;
         } else {
-            elementDoDelete = tNode1.next.element;
-            tNode1.next = tNode1.next.next;
+            elementDoDelete = previousIndexNode.next.element;
+            previousIndexNode.next = previousIndexNode.next.next;
         }
         size--;
         return elementDoDelete; // todo: implement this method

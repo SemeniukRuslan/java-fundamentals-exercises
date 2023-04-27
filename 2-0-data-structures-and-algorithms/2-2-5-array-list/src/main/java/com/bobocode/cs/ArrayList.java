@@ -75,6 +75,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     /**
+     *
      * Adds an element to the specific position in the array where
      *
      * @param index   index of position
@@ -97,6 +98,7 @@ public class ArrayList<T> implements List<T> {
      * @return en element
      */
     @Override
+    @SuppressWarnings("unchecked")
     public T get(int index) {
         Objects.checkIndex(index, size);
         return (T) elements[index];
@@ -147,6 +149,7 @@ public class ArrayList<T> implements List<T> {
      * @return deleted element
      */
     @Override
+    @SuppressWarnings("unchecked")
     public T remove(int index) {
         Objects.checkIndex(index, size);
         T elementRemove = (T) elements[index];

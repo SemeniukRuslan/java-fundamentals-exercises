@@ -1,6 +1,6 @@
 package com.bobobode.cs;
 
-import com.bobocode.util.ExerciseNotCompletedException;
+import javax.swing.*;
 
 /**
  * A class that consists of static methods only and provides util methods for {@link Node}.
@@ -86,7 +86,7 @@ public class Nodes {
         Node<T> current = first;
         for (int i = 1; i < elements.length; i++) {
             current.next = new Node<>(elements[i]);
-            current = current.next;
+            current = current.next; // для створення ланцюжку, самі переходимо на слід. ноду
         }
         return first;
     }
@@ -111,13 +111,3 @@ public class Nodes {
         return first;
     }
 }
-
-
-//    Node<T> first = new Node<>(elements[0]);
-//    Node<T> current = first;
-//        for (int i = 1; i < elements.length; i++) {
-//        current.next = new Node<>(elements[i]);
-//        current = current.next;
-//        }
-//        current.next = first;
-//        return first;

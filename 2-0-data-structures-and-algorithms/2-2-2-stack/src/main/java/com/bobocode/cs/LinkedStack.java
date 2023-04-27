@@ -1,7 +1,6 @@
 package com.bobocode.cs;
 
 import com.bobocode.cs.exception.EmptyStackException;
-import com.bobocode.util.ExerciseNotCompletedException;
 
 import java.util.Objects;
 
@@ -18,8 +17,7 @@ import java.util.Objects;
  */
 public class LinkedStack<T> implements Stack<T> {
     private Node<T> first;
-    private Node<T> last;
-    private int size;
+    private int size = 0;
 
     static class Node<T> {
         T element;
@@ -54,18 +52,15 @@ public class LinkedStack<T> implements Stack<T> {
     @Override
     public void push(T element) {
         Objects.checkIndex(0, size + 1);
+        Objects.requireNonNull(element);
         Node<T> node = new Node<>(element);
-        if (element == null) {
-            throw new NullPointerException();
-        }
         if (first == null) {
-            first = last = node;
-            size++;
+            first = node;
         } else {
             node.next = first;
             first = node;
-            size++;
         }
+        size++;
     }
 
     /**
@@ -105,5 +100,4 @@ public class LinkedStack<T> implements Stack<T> {
     public boolean isEmpty() {
         return first == null;
     }
-
 }

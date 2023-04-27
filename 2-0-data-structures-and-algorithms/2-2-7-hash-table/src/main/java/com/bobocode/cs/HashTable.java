@@ -1,7 +1,5 @@
 package com.bobocode.cs;
 
-import com.bobocode.util.ExerciseNotCompletedException;
-
 /**
  * {@link HashTable} is a simple Hashtable-based implementation of {@link Map} interface with some additional methods.
  * It is based on the array of {@link Node} objects. Both {@link HashTable} and {@link Node} have two type parameters:
@@ -27,14 +25,14 @@ import com.bobocode.util.ExerciseNotCompletedException;
  * @author Taras Boychuk
  */
 public class HashTable<K, V> implements Map<K, V> {
-    private Node<K,V>[] table;
+    private static final int DEFAULT_CAPACITY = 8;
+    private static final float RESIZE_THRESHOLD = 0.9f;
+    private Node<K, V>[] table;
     private int size;
-    private static final int DEFAULT_SIZE = 5;
 
-    static class Node<K, V> {
+    public static class Node<K, V> {
         K key;
         V value;
-        int hash;
         Node<K, V> next;
 
         public Node(K key, V value) {
@@ -43,11 +41,15 @@ public class HashTable<K, V> implements Map<K, V> {
         }
     }
 
-    public HashTable(int capacity){
+    public HashTable(int capacity) {
         if (capacity <= 0) {
             throw new IllegalArgumentException();
         }
-        table = new Node<K, V>[capacity];
+        table = new Node[capacity];
+    }
+
+    public HashTable() {
+        this(DEFAULT_CAPACITY);
     }
 
     /**
@@ -65,7 +67,7 @@ public class HashTable<K, V> implements Map<K, V> {
      * @return array index of the given key
      */
     public static int calculateIndex(Object key, int tableCapacity) {
-return 1;
+        return 0;
     }
 
     /**
@@ -81,7 +83,15 @@ return 1;
      */
     @Override
     public V put(K key, V value) {
-        throw new ExerciseNotCompletedException(); // todo:
+        return null;
+    }
+
+    private void resizeIfNeeded() {
+
+    }
+
+    private V putOnTable(Node<K, V>[] table, K key, V value) {
+        return null;
     }
 
     /**
@@ -93,7 +103,7 @@ return 1;
      */
     @Override
     public V get(K key) {
-        throw new ExerciseNotCompletedException(); // todo:
+        return null;
     }
 
     /**
@@ -104,7 +114,7 @@ return 1;
      */
     @Override
     public boolean containsKey(K key) {
-        throw new ExerciseNotCompletedException(); // todo:
+        return get(key) != null;
     }
 
     /**
@@ -115,7 +125,7 @@ return 1;
      */
     @Override
     public boolean containsValue(V value) {
-        throw new ExerciseNotCompletedException(); // todo:
+        return false;
     }
 
     /**
@@ -125,7 +135,7 @@ return 1;
      */
     @Override
     public int size() {
-        throw new ExerciseNotCompletedException(); // todo:
+        return size;
     }
 
     /**
@@ -135,7 +145,7 @@ return 1;
      */
     @Override
     public boolean isEmpty() {
-        throw new ExerciseNotCompletedException(); // todo:
+        return size == 0;
     }
 
     /**
@@ -146,7 +156,7 @@ return 1;
      */
     @Override
     public V remove(K key) {
-        throw new ExerciseNotCompletedException(); // todo:
+        return null;
     }
 
     /**
@@ -172,7 +182,7 @@ return 1;
      */
     @Override
     public String toString() {
-        throw new ExerciseNotCompletedException(); // todo:
+        return null;
     }
 
     /**
@@ -189,6 +199,5 @@ return 1;
      * @param newCapacity a size of the new underlying array
      */
     public void resizeTable(int newCapacity) {
-        throw new ExerciseNotCompletedException(); // todo:
     }
 }
